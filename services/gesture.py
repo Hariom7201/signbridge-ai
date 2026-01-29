@@ -1,5 +1,5 @@
-import mediapipe as mp
 import cv2
+import mediapipe as mp
 
 mp_hands = mp.solutions.hands
 mp_draw = mp.solutions.drawing_utils
@@ -12,10 +12,6 @@ hands = mp_hands.Hands(
 )
 
 def detect_sign(frame):
-    """
-    Detects hand landmarks and returns a dummy label for now.
-    This is MVP-safe and Render-safe.
-    """
     image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = hands.process(image_rgb)
 
