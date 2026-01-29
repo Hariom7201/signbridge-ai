@@ -1,12 +1,7 @@
+import os
 import streamlit as st
-from services.camera import live_camera
-from services.video import video_translate
-from services.image import image_translate
 
-st.set_page_config(page_title="SignBridge AI", layout="wide")
-
-st.title("🤝 SignBridge AI")
-st.subheader("Unified Sign Language Translation Platform")
+IS_CLOUD = os.getenv("STREAMLIT_SERVER_RUNNING") == "true"
 
 mode = st.sidebar.radio(
     "Choose Input Mode",
@@ -14,10 +9,8 @@ mode = st.sidebar.radio(
 )
 
 if mode == "Live Camera":
-    live_camera()
-
-elif mode == "Video Upload":
-    video_translate()
-
-elif mode == "Image Upload":
-    image_translate()
+    if IS_CLOUD:
+        st.error("Live Camera works only on local machine.")
+    else:
+        from services.camera import live_camera
+        live_camera()
