@@ -1,23 +1,19 @@
 import streamlit as st
-import cv2
-import numpy as np
+from PIL import Image
 from services.gesture import detect_sign
-from services.gemini import refine
 from services.tts import speak_once
 
-def image_translate():
-    st.header("🖼️ Image Translation")
+def image_ui():
+    st.subheader("Image Translation")
 
-    img = st.file_uploader("Upload Image", type=["jpg", "png"])
-    if not img:
-        return
+    uploaded = st.file_uploader("Upload Image", type=["jpg", "png", "jpeg"])
 
-    file_bytes = np.asarray(bytearray(img.read()), dtype=np.uint8)
-    frame = cv2.imdecode(file_bytes, 1)
+    if uploaded:
+        img = Image.open(uploaded)
+        st.image(img, caption="Uploaded Image")
 
-    sign = detect_sign(frame)
-    refined = refine(sign)
+        caption = detect_sign(None)
+        st.success(f"Caption: {caption}")
 
-    st.image(frame)
-    st.success(refined)
-    speak_once(refined)
+        if st.button("Speak Caption"):
+            speak_once(caption)

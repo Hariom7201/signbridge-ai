@@ -1,9 +1,11 @@
 import pyttsx3
 
-engine = pyttsx3.init()
-engine.setProperty("rate", 160)
+_engine = pyttsx3.init()
+_last_spoken = ""
 
 def speak_once(text):
-    engine.stop()
-    engine.say(text)
-    engine.runAndWait()
+    global _last_spoken
+    if text != _last_spoken:
+        _engine.say(text)
+        _engine.runAndWait()
+        _last_spoken = text

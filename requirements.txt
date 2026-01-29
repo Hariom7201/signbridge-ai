@@ -1,7 +1,5 @@
 streamlit
-opencv-python
-mediapipe
-google-generativeai
-python-dotenv
-pyttsx3
+opencv-python-headless
 numpy
+pillow
+pyttsx3
