@@ -1,6 +1,7 @@
-streamlit
+mediapipe==0.10.14
 opencv-python
-mediapipe
-pyttsx3
-google-generativeai
+streamlit
 numpy
+google-generativeai
+python-dotenv
+pyttsx3
