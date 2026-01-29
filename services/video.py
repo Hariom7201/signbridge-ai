@@ -1,23 +1,32 @@
-# services/video.py
-import cv2
 import streamlit as st
-from .gesture import detect_sign
-from . acknowledged import speak
+import cv2
+from services.gesture import detect_sign
+from services.gemini import refine
+from services.tts import speak_once
 
-def process_video(video_path):
-    cap = cv2.VideoCapture(video_path)
+def video_translate():
+    st.header("🎥 Video Translation")
+
+    video = st.file_uploader("Upload video", type=["mp4", "avi"])
+    if not video:
+        return
+
+    tfile = open("temp.mp4", "wb")
+    tfile.write(video.read())
+
+    cap = cv2.VideoCapture("temp.mp4")
+    stframe = st.empty()
 
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
             break
 
-        caption = detect_sign(frame)
-        if caption:
-            st.info(f"Caption: {caption}")
-            speak(caption)
+        sign = detect_sign(frame)
+        if sign:
+            refined = refine(sign)
+            st.caption(refined)
+            speak_once(refined)
 
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        st.image(frame)
-
-    cap.release()
+        stframe.image(frame)

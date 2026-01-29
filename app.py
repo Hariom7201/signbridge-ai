@@ -1,33 +1,23 @@
 import streamlit as st
 from services.camera import live_camera
-from services.video import process_video
-from services.image import process_image
+from services.video import video_translate
+from services.image import image_translate
 
 st.set_page_config(page_title="SignBridge AI", layout="wide")
 
 st.title("🤝 SignBridge AI")
-st.caption("Unified Sign Language Translation Platform")
+st.subheader("Unified Sign Language Translation Platform")
 
-mode = st.radio(
+mode = st.sidebar.radio(
     "Choose Input Mode",
-    ["Live Camera", "Upload Video", "Upload Image"]
+    ["Live Camera", "Video Upload", "Image Upload"]
 )
 
 if mode == "Live Camera":
-    if st.button("Start Camera"):
-        live_camera()
+    live_camera()
 
-elif mode == "Upload Video":
-    video = st.file_uploader("Upload Video", type=["mp4", "avi"])
-    if video:
-        with open("temp.mp4", "wb") as f:
-            f.write(video.read())
-        process_video("temp.mp4")
+elif mode == "Video Upload":
+    video_translate()
 
-elif mode == "Upload Image":
-    img = st.file_uploader("Upload Image", type=["jpg", "png"])
-    if img:
-        import numpy as np
-        file_bytes = np.asarray(bytearray(img.read()), dtype=np.uint8)
-        image = cv2.imdecode(file_bytes, 1)
-        process_image(image)
+elif mode == "Image Upload":
+    image_translate()

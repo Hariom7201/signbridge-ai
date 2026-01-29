@@ -1,11 +1,13 @@
-# services/gemini.py
 import os
-import google.generativeai as genai
+from dotenv import load_dotenv
+from google import genai
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+load_dotenv()
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-model = genai.GenerativeModel("gemini-pro")
-
-def refine_text(text):
-    response = model.generate_content(f"Improve this sentence: {text}")
-    return response.text
+def refine(text):
+    response = client.models.generate_content(
+        model="gemini-1.5-flash",
+        contents=f"Convert sign words to natural sentence: {text}"
+    )
+    return response.text.strip()

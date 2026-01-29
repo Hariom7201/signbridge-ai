@@ -1,24 +1,32 @@
-# services/camera.py
-import cv2
 import streamlit as st
-from .gesture import detect_sign   # ✅ RELATIVE IMPORT
-from .tts import speak
+import cv2
+from services.gesture import detect_sign
+from services.gemini import refine
+from services.tts import speak_once
 
 def live_camera():
-    cap = cv2.VideoCapture(0)
-    frame_placeholder = st.empty()
+    st.header("📷 Live Camera Mode")
 
-    while cap.isOpened():
+    frame_placeholder = st.empty()
+    cap = cv2.VideoCapture(0)
+
+    last_spoken = ""
+
+    while True:
         ret, frame = cap.read()
         if not ret:
+            st.error("Camera not accessible")
             break
 
-        caption = detect_sign(frame)
-        if caption:
-            st.success(f"Caption: {caption}")
-            speak(caption)
+        sign = detect_sign(frame)
+
+        if sign:
+            refined = refine(sign)
+            st.success(refined)
+
+            if refined != last_spoken:
+                speak_once(refined)
+                last_spoken = refined
 
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame_placeholder.image(frame)
-
-    cap.release()
