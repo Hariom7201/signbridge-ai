@@ -1,36 +1,24 @@
-import streamlit as st
+# services/camera.py
 import cv2
-from services.gesture import detect_sign
-from services.tts import speak_once
+import streamlit as st
+from .gesture import detect_sign   # ✅ RELATIVE IMPORT
+from .tts import speak
 
-def camera_ui():
-    st.subheader("Live Camera Translation")
-
-    camera_on = st.checkbox("Start Camera")
-
+def live_camera():
+    cap = cv2.VideoCapture(0)
     frame_placeholder = st.empty()
-    caption_placeholder = st.empty()
 
-    if camera_on:
-        cap = cv2.VideoCapture(0)
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
 
-        if not cap.isOpened():
-            st.error("Camera not accessible")
-            return
+        caption = detect_sign(frame)
+        if caption:
+            st.success(f"Caption: {caption}")
+            speak(caption)
 
-        while camera_on:
-            ret, frame = cap.read()
-            if not ret:
-                break
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame_placeholder.image(frame)
 
-            caption = detect_sign(frame)
-
-            frame_placeholder.image(frame, channels="BGR")
-            caption_placeholder.success(f"Caption: {caption}")
-
-            speak_once(caption)
-
-            if not st.session_state.get("camera_active", True):
-                break
-
-        cap.release()
+    cap.release()

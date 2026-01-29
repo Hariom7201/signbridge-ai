@@ -1,19 +1,13 @@
+# services/image.py
+import cv2
 import streamlit as st
-from PIL import Image
-from services.gesture import detect_sign
-from services.tts import speak_once
+from .gesture import detect_sign
 
-def image_ui():
-    st.subheader("Image Translation")
+def process_image(image):
+    frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    caption = detect_sign(frame)
 
-    uploaded = st.file_uploader("Upload Image", type=["jpg", "png", "jpeg"])
+    if caption:
+        st.success(f"Detected Sign: {caption}")
 
-    if uploaded:
-        img = Image.open(uploaded)
-        st.image(img, caption="Uploaded Image")
-
-        caption = detect_sign(None)
-        st.success(f"Caption: {caption}")
-
-        if st.button("Speak Caption"):
-            speak_once(caption)
+    st.image(frame)

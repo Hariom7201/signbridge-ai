@@ -1,11 +1,10 @@
+# services/tts.py
 import pyttsx3
 
-_engine = pyttsx3.init()
-_last_spoken = ""
+engine = pyttsx3.init()
+engine.setProperty("rate", 160)
 
-def speak_once(text):
-    global _last_spoken
-    if text != _last_spoken:
-        _engine.say(text)
-        _engine.runAndWait()
-        _last_spoken = text
+def speak(text):
+    engine.stop()
+    engine.say(text)
+    engine.runAndWait()

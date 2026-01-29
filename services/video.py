@@ -1,34 +1,23 @@
-import streamlit as st
-import tempfile
+# services/video.py
 import cv2
-from services.gesture import detect_sign
-from services.tts import speak_once
+import streamlit as st
+from .gesture import detect_sign
+from . acknowledged import speak
 
-def video_ui():
-    st.subheader("Video Translation")
+def process_video(video_path):
+    cap = cv2.VideoCapture(video_path)
 
-    uploaded = st.file_uploader("Upload Video", type=["mp4", "avi", "mov"])
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
 
-    if uploaded:
-        tfile = tempfile.NamedTemporaryFile(delete=False)
-        tfile.write(uploaded.read())
+        caption = detect_sign(frame)
+        if caption:
+            st.info(f"Caption: {caption}")
+            speak(caption)
 
-        cap = cv2.VideoCapture(tfile.name)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        st.image(frame)
 
-        frame_box = st.empty()
-        caption_box = st.empty()
-
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            caption = detect_sign(frame)
-
-            frame_box.image(frame, channels="BGR")
-            caption_box.info(f"Caption: {caption}")
-
-        cap.release()
-
-        if st.button("Speak Last Caption"):
-            speak_once(caption)
+    cap.release()
