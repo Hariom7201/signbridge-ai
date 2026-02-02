@@ -61,7 +61,7 @@ Everything runs inside a Streamlit-powered web app
 The application is deployed using Streamlit Community Cloud.
 
 🔗 Live Demo:
-👉 (Add your Streamlit app URL here)
+
 
 🔐 Environment Variables
 
