@@ -1,11 +1,21 @@
-🤝 SignBridge AI
+# SignBridge AI 🤝
 
-Unified Sign Language Translation Platform
+SignBridge AI is a unified platform for translating sign language into
+text and speech using images, video, and real-time camera input.
 
-Breaking communication barriers by translating sign language into text and speech using AI — in real time and from videos or images.
+## Current Progress (Pre-Hackathon)
+✔ Idea finalization  
+✔ System architecture  
+✔ Project scaffold  
+✔ Image-based demo pipeline  
 
-🚀 Overview
+## Planned Hackathon-Day Features
+- Live camera gesture detection
+- Video-based captioning
+- Speech output
+- Advanced gesture recognition using MediaPipe
 
+<<<<<<< HEAD
 SignBridge AI is an AI-powered platform that translates sign language gestures into readable captions and audible speech.
 It supports live camera input, uploaded videos, and images, all within a single unified web interface.
 
@@ -113,3 +123,10 @@ This project is open-source and available under the MIT License.
 ⭐ Final Note (For Judges)
 
 SignBridge AI is not just a project — it is a step toward inclusive communication powered by AI.
+=======
+## Tech Stack
+- Streamlit
+- Python
+- MediaPipe (planned)
+- OpenCV (planned)
+>>>>>>> 81f97fe (Hackathon-safe scaffold (35% completion))

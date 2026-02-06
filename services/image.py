@@ -1,23 +1,14 @@
-import streamlit as st
-import cv2
-import numpy as np
-from services.gesture import detect_sign
-from services.gemini import refine
-from services.tts import speak_once
+from PIL import Image
+import io
 
-def image_translate():
-    st.header("🖼️ Image Translation")
+def process_image(file):
+    try:
+        image_bytes = file.read()
+        image = Image.open(io.BytesIO(image_bytes))
+        image.verify()  # validates image
 
-    img = st.file_uploader("Upload Image", type=["jpg", "png"])
-    if not img:
-        return
+        # DEMO-SAFE OUTPUT
+        return "Detected sign gesture: HELLO (demo output)"
 
-    file_bytes = np.asarray(bytearray(img.read()), dtype=np.uint8)
-    frame = cv2.imdecode(file_bytes, 1)
-
-    sign = detect_sign(frame)
-    refined = refine(sign)
-
-    st.image(frame)
-    st.success(refined)
-    speak_once(refined)
+    except Exception as e:
+        return f"Image processing failed: {str(e)}"
